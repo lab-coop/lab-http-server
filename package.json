@@ -4,8 +4,22 @@
   "description": "Lab HTTP server service ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm-watch",
+    "test:loop": "npm run test:features && npm run test:mocha",
+    "test:mocha": "mocha */*.spec.js --colors",
+    "test:mocha:loop": "npm run test:mocha 2> /dev/null || exit 0",
+    "test:features": "cucumber-js features/*.feature",
+    "test:features:loop": "npm run test:features || exit 0"
+  },
+  "watch": {
+    "test:loop": {
+      "extensions": ["js", "json", "feature"]
+    }
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^3.1.0",
+    "npm-watch": "^0.1.6"
+  }
 }
