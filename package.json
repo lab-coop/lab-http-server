@@ -5,15 +5,25 @@
   "main": "index.js",
   "scripts": {
     "test": "npm-watch",
-    "test:loop": "npm run test:features && npm run test:mocha",
+    "test:safe": "npm run test:features:safe && npm run test:mocha:safe",
     "test:mocha": "mocha */*.spec.js --colors",
-    "test:mocha:loop": "npm run test:mocha 2> /dev/null || exit 0",
+    "test:mocha:safe": "npm run test:mocha 2> /dev/null || exit 0",
     "test:features": "cucumber-js features/*.feature",
-    "test:features:loop": "npm run test:features || exit 0"
+    "test:features:safe": "npm run test:features || exit 0"
   },
   "watch": {
-    "test:loop": {
-      "extensions": ["js", "json", "feature"]
+    "test:safe": {
+      "patterns": [
+        "**"
+      ],
+      "extensions": [
+        "js",
+        "json",
+        "feature"
+      ],
+      "ignore": [
+        "node_modules"
+      ]
     }
   },
   "author": "",
