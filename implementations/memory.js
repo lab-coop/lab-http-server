@@ -31,9 +31,15 @@ module.exports = function HTTPServerMemoryImplementation() {
 
       const middlewares = routesByVerb[verb.toLowerCase()][query] || [];
       const ctx = {
-        status: middlewares.length === 0 ? 404 : 200
+        status: middlewares.length === 0 ? 404 : 200,
+        response: {}
       };
-      return middlewareHelper.processMiddlewares(ctx, middlewares);
+      return middlewareHelper.processMiddlewares(ctx, middlewares).then(() => {
+        return {
+          status: ctx.status,
+          body: ctx.response.body
+        }
+      });
     }
   }
 };
