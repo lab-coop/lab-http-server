@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm-watch",
-    "test:safe": "npm run test:features:safe && npm run test:mocha:safe",
+    "test:safe": "npm run test:mocha:safe && npm run test:features:safe",
     "test:mocha": "mocha */*.spec.js --colors",
     "test:mocha:safe": "npm run test:mocha 2> /dev/null || exit 0",
     "test:features": "cucumber-js features/*.feature",
@@ -29,7 +29,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^3.5.0",
     "mocha": "^3.1.0",
     "npm-watch": "^0.1.6"
+  },
+  "dependencies": {
+    "co": "^4.6.0",
+    "lodash": "^4.16.2"
   }
 }
