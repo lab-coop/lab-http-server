@@ -1,45 +1,65 @@
 'use strict';
+const _ = require('lodash');
 const middlewareHelper = require('../lib/middleware-helper');
+const pathToRegexp = require('path-to-regexp');
 module.exports = function HTTPServerMemoryImplementation() {
-  let routesByVerb = {
-    get: {}
-  };
+  let routes;
   return Object.freeze({
     createServer: createInMemoryServer
   });
   function createInMemoryServer() {
+    routes = [];
     let started = false;
     return Object.freeze({
       registerRoute,
-      start,
+      start: () => started = true,
+      stop: () => started = false,
       sendRequest
     });
 
     function registerRoute(verb, path, ...middlewares) {
-      routesByVerb[verb.toLowerCase()][path] = middlewares;
+      const keys = [];
+      const pattern = pathToRegexp(path, keys);
+      routes.push({
+        method: verb.toLowerCase(),
+        path,
+        middlewares,
+        paramKeys: keys.map(key => key.name),
+        pattern
+      })
     }
 
-    function start() {
-      started = true;
+    function findRoute(verb, query) {
+      return _.find(routes, route =>
+          route.method === verb.toLowerCase() &&
+          route.pattern.exec(query));
     }
 
-    function sendRequest(verb, query) {
+    function sendRequest(verb, queryString) {
+      const [query] = queryString.split('?');
       if (!started) {
         throw new Error('Trying to send a request to a non-started HTTP server');
       }
-      console.log(`Fake ${verb} request sent to ${query}`);
-
-      const middlewares = routesByVerb[verb.toLowerCase()][query] || [];
+      const route = findRoute(verb, query);
+      const params = route ? extractParams(route, query) : {};
       const ctx = {
-        status: middlewares.length === 0 ? 404 : 200,
+        status: _.get(route, 'middlewares.length', 0) === 0 ? 404 : 200,
+        params,
+        request: { params },
         response: {}
       };
+      const middlewares = _.get(route, 'middlewares', []);
       return middlewareHelper.processMiddlewares(ctx, middlewares).then(() => {
         return {
           status: ctx.status,
           body: ctx.response.body
         }
       });
+    }
+
+    function extractParams(route, query) {
+      if (!route) return {};
+      else return _.zipObject(route.paramKeys, route.pattern.exec(query).slice(1));
     }
   }
 };

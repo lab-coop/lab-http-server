@@ -21,9 +21,9 @@ Feature:
   Scenario: The HTTP server has a registered endpoint, and it responds with a JSON
     Given an HTTP server exists
     And this HTTP server is started
-    And the GET /some/endpoint HTTP route is defined
-    When the GET /some/endpoint HTTP query is processed
+    And the GET /resources/:resourceId/nested/:nestedId HTTP route is defined
+    When the GET /resources/42/nested/1?option=7 HTTP query is processed
     Then the HTTP response code is 200
-    Then the HTTP response JSON contains that "query" is "/some/endpoint"
-    Then the HTTP response JSON contains that "verb" is "GET"
+    Then the HTTP response JSON contains that "params.resourceId" is "42"
+    Then the HTTP response JSON contains that "params.nestedId" is "1"
 
