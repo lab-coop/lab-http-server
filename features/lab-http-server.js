@@ -16,13 +16,10 @@ module.exports = function() {
     this.context.httpServer.instance = httpServer.createServer();
     return this.context.httpServer.instance.start();
   });
-
-
   this.Given('an HTTP server exists', function() {
     const httpServer = this.container.get('httpServer');
     this.context.httpServer.instance = httpServer.createServer();
   });
-
   this.Given('this HTTP server is started', function() {
     return this.context.httpServer.instance.start();
   });
@@ -59,7 +56,7 @@ module.exports = function() {
 
   this.Then('the HTTP response JSON contains no "$key"', function(key) {
     const json = ensureObject(this.context.httpServer.response.body);
-    expect(_.get(json, key, undefined)).to.be.undefined;
+    expect(_.get(json, key)).to.be.undefined;
   });
 
   function ensureObject(value) {

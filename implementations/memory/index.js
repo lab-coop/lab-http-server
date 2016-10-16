@@ -1,8 +1,8 @@
 'use strict';
 const _ = require('lodash');
 const querystring = require('querystring');
-const middlewareHelper = require('../lib/middleware-helper');
-const contextHelper = require('../lib/context-helper');
+const middlewareHelper = require('./lib/middleware-helper');
+const contextHelper = require('./lib/context-helper');
 
 module.exports = function HTTPServerMemoryImplementation() {
   let routes;

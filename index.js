@@ -2,10 +2,16 @@
 
 module.exports = function HTTPServerService(config) {
   const implementationType = config.get('httpServer.type');
-  switch (implementationType) {
-    case 'koa':
-      return require('./implementations/koa2').call(undefined, arguments);
-    case 'memory':
-      return require('./implementations/memory').call(undefined, arguments);
+  return getImplementation(implementationType)(...arguments);
+
+  function getImplementation(implementationType) {
+    switch (implementationType) {
+      case 'koa':
+        return require('./implementations/koa2');
+      case 'memory':
+        return require('./implementations/memory');
+      default:
+        throw new Error(`Could not find ${implementationType} implementation.`);
+    }
   }
 };

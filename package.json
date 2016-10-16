@@ -36,5 +36,10 @@
   "dependencies": {
     "co": "^4.6.0",
     "lodash": "^4.16.2"
+  },
+  "peerDependencies": {
+    "koa": "^2.0.0",
+    "koa-bodyparser": "^2.2.0",
+    "koa-router": "^7.0.1"
   }
 }
