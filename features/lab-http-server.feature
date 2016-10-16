@@ -25,7 +25,7 @@ Feature:
   Scenario: The HTTP server has a registered route but an invalid method is queried
     Given the PUT /some/post/endpoint HTTP route is defined
     When the POST /some/post/endpoint HTTP query is processed
-    Then the HTTP response code is 404
+    Then the HTTP response code is 405
 
   Scenario: The HTTP server has a registered endpoint, and it responds with a JSON
     Given the GET /resources/:resourceId/nested/:nestedId HTTP route is defined

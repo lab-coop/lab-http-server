@@ -8,8 +8,10 @@ function World() {
   const config = Object.freeze({
     get: key => {
       switch (key) {
-        case 'httpServer.type': return process.env.LAB_HTTP_SERVER_TYPE || 'memory';
-        default: throw new Error(`Could not find config value for ${key}`)
+        case 'httpServer.type':
+          return process.env.LAB_HTTP_SERVER_TYPE || 'memory';
+        default:
+          throw new Error(`Could not find config value for ${key}`)
       }
       return key === 'httpServer.type' ? 'memory' : undefined;
     }

@@ -13,6 +13,20 @@ describe('context-helper', () => {
     });
   });
 
+  describe('findMethodNotAllowedRoute', () => {
+    it('should return undefined if not found', () => {
+      expect(contextHelper.findMethodNotAllowedRoute([], 'GeT', '/')).to.be.undefined;
+    });
+    it('should return undefined it the HTTP verb matches', () => {
+      const route = contextHelper.createRoute('gEt', '/', (ctx, next) => next());
+      expect(contextHelper.findMethodNotAllowedRoute([route], 'GeT', '/')).not.to.be.ok;
+    });
+    it('should find a route which was querid ', () => {
+      const route = contextHelper.createRoute('gEt', '/', (ctx, next) => next());
+      expect(contextHelper.findMethodNotAllowedRoute([route], 'POST', '/')).to.be.ok;
+    });
+  });
+
   describe('getContext', () => {
     it('should create a context object from a route and a path', () => {
       const route = contextHelper.createRoute('GET', '/', (ctx, next) => next());
