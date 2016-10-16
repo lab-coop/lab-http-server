@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "6"
+env:
+  - FOO=1 LAB_HTTP_SERVER_TYPE=memory
+  - FOO=2 LAB_HTTP_SERVER_TYPE=koa2
+install:
+  - "npm install"
+  - "npm install koa@2 koa-router@next koa-bodyparser@next"
+script:
+  - "npm run test:mocha"
+  - "npm run test:features"

@@ -6,7 +6,7 @@ module.exports = function HTTPServerService(config) {
 
   function getImplementation(implementationType) {
     switch (implementationType) {
-      case 'koa':
+      case 'koa2':
         return require('./implementations/koa2');
       case 'memory':
         return require('./implementations/memory');
