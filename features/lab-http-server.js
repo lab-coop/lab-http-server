@@ -11,6 +11,13 @@ module.exports = function() {
     _.get(this.context, 'httpServer.instance.stop', () => {})();
   });
 
+  this.Given('an HTTP server is started', function() {
+    const httpServer = this.container.get('httpServer');
+    this.context.httpServer.instance = httpServer.createServer();
+    return this.context.httpServer.instance.start();
+  });
+
+
   this.Given('an HTTP server exists', function() {
     const httpServer = this.container.get('httpServer');
     this.context.httpServer.instance = httpServer.createServer();
@@ -22,7 +29,15 @@ module.exports = function() {
 
   this.Given('the $verb $query HTTP route is defined', function(verb, path) {
     this.context.httpServer.instance.registerRoute(verb, path, (ctx, next) => {
-      ctx.response.body = { test: true, verb, path, query: ctx.query, params: ctx.params };
+      ctx.response.body = {
+        test: true,
+        verb, path,
+        query: ctx.query,
+        params: ctx.params,
+        request: {
+          body: ctx.request.body
+        }
+      };
       return next();
     });
   });
@@ -40,6 +55,11 @@ module.exports = function() {
   this.Then('the HTTP response JSON contains that "$key" is "$value"', function(key, value) {
     const json = ensureObject(this.context.httpServer.response.body);
     expect(_.get(json, key)).to.equal(value);
+  });
+
+  this.Then('the HTTP response JSON contains no "$key"', function(key) {
+    const json = ensureObject(this.context.httpServer.response.body);
+    expect(_.get(json, key, undefined)).to.be.undefined;
   });
 
   function ensureObject(value) {
