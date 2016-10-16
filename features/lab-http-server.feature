@@ -41,3 +41,8 @@ Feature:
     Then the HTTP response code is 200
     Then the HTTP response JSON contains no "response.body"
 
+  Scenario: The HTTP server receives a POST request with some form data
+    Given the POST /some/post/endpoint HTTP route is defined
+    When POST data "collection[key]=value" arrives to /some/post/endpoint
+    Then the HTTP response code is 200
+    Then the HTTP response JSON contains that "request.body" is "collection[key]=value"

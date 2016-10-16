@@ -35,13 +35,13 @@ module.exports = function HTTPServerKoaImplementation() {
       console.log('Stopped on port', port);
     }
 
-    function sendRequest(method, query) {
+    function sendRequest(method, query, {body, headers}={}) {
       if (query[0] === '/') query = query.slice(1);
-      return fetch(`http://${hostname}:${port}/${query}`, {method}).then(response => {
-        return response.text().then(body => {
+      return fetch(`http://${hostname}:${port}/${query}`, {method, body, headers}).then(response => {
+        return response.text().then(responseText => {
           return {
             status: response.status,
-            body
+            body: responseText
           };
         });
       });

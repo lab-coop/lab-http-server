@@ -27,13 +27,13 @@ function findRoute(routes, verb, query) {
       route.pattern.test(query));
 }
 
-function getContext(route, path, query) {
+function getContext(route, path, query, body) {
   const params = extractParams(route, path);
   return Object.freeze({
     status: _.get(route, 'middlewares.length', 0) === 0 ? 404 : 200,
     params,
     query,
-    request: { params },
+    request: { body, params },
     response: {}
   });
 }

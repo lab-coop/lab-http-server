@@ -45,6 +45,12 @@ module.exports = function() {
     });
   });
 
+  this.When('POST data "$formdata" arrives to $query', function (body, query) {
+    return this.context.httpServer.instance.sendRequest('POST', query, {body}).then(res => {
+      this.context.httpServer.response = res;
+    });
+  });
+
   this.Then('the HTTP response code is $status', function(status) {
     expect(this.context.httpServer.response.status).to.equal(parseInt(status));
   });

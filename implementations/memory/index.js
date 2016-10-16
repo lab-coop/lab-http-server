@@ -23,15 +23,16 @@ module.exports = function HTTPServerMemoryImplementation() {
       routes.push(contextHelper.createRoute(verb, path, middlewares));
     }
 
-    function sendRequest(verb, path) {
+    function sendRequest(verb, path, {body}={}) {
       let [query, params] = path.split('?');
       params = querystring.parse(params);
       if (!started) {
         throw new Error(`HTTP server is not started when ${verb}ing ${path}.`);
       }
       const route = contextHelper.findRoute(routes, verb, query);
-      const ctx = contextHelper.getContext(route, query, params);
+      const ctx = contextHelper.getContext(route, query, params, body);
       const middlewares = _.get(route, 'middlewares', []);
+      console.log(`Processing ${middlewares.length} middlewares for this route`, route);
       return middlewareHelper.processMiddlewares(ctx, middlewares).then(() => {
         return {
           status: ctx.status,
