@@ -32,7 +32,7 @@ module.exports = function() {
         query: ctx.query,
         params: ctx.params,
         request: {
-          body: ctx.request.body
+          body: _.get(ctx, 'request.body')
         }
       };
       // console.log('Responding with', ctx.response.body);
