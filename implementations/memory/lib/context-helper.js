@@ -34,12 +34,6 @@ function findMethodNotAllowedRoute(routes, verb, query) {
       route.pattern.test(query));
 }
 
-function findNotAllowedRoute(routes, verb) {
-  return _.find(routes, route =>
-      route.method !== verb.toLowerCase() &&
-      route.pattern.test(query));
-}
-
 function getContext(route, path, query, body, status) {
   const params = extractParams(route, path);
   return Object.freeze({

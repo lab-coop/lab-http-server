@@ -23,8 +23,13 @@ module.exports = function HTTPServerMemoryImplementation() {
       routes.push(contextHelper.createRoute(verb, path, middlewares));
     }
 
-    function sendRequest(verb, path, {body}={}) {
+    function sendRequest(verb, path, {body, headers}={}) {
       let [query, params] = path.split('?');
+      body = parseBody(body, headers);
+      function parseBody(body, headers={}) {
+        if (headers['Content-Type'] === 'application/json') return JSON.parse(body);
+        else return body;
+      }
       params = querystring.parse(params);
       if (!started) {
         throw new Error(`HTTP server is not started when ${verb}ing ${path}.`);
@@ -38,7 +43,7 @@ module.exports = function HTTPServerMemoryImplementation() {
       return middlewareHelper.processMiddlewares(ctx, middlewares).then(() => {
         return {
           status: status || ctx.status,
-          body: ctx.response.body
+          body: JSON.stringify(ctx.response.body)
         }
       });
     }

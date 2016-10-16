@@ -2,6 +2,7 @@
 
 const Koa = require('koa');
 const Router = require('koa-router');
+const bodyparser = require('koa-bodyparser');
 const fetch = require('node-fetch');
 
 module.exports = function HTTPServerKoaImplementation() {
@@ -24,6 +25,7 @@ module.exports = function HTTPServerKoaImplementation() {
     }
 
     function start() {
+      App.use(bodyparser({}));
       App.use(router.routes());
       App.use(router.allowedMethods());
       server = App.listen(port);
@@ -37,7 +39,9 @@ module.exports = function HTTPServerKoaImplementation() {
 
     function sendRequest(method, query, {body, headers}={}) {
       if (query[0] === '/') query = query.slice(1);
-      return fetch(`http://${hostname}:${port}/${query}`, {method, body, headers}).then(response => {
+      return fetch(`http://${hostname}:${port}/${query}`, {
+        method, body, headers
+      }).then(response => {
         return response.text().then(responseText => {
           return {
             status: response.status,

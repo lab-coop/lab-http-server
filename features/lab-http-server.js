@@ -35,6 +35,7 @@ module.exports = function() {
           body: ctx.request.body
         }
       };
+      // console.log('Responding with', ctx.response.body);
       return next();
     });
   });
@@ -45,14 +46,22 @@ module.exports = function() {
     });
   });
 
-  this.When('POST data "$formdata" arrives to $query', function (body, query) {
-    return this.context.httpServer.instance.sendRequest('POST', query, {body}).then(res => {
+  this.When('the $json JSON arrives to POST $query', function (json, query) {
+    return this.context.httpServer.instance.sendRequest('POST', query, {
+      body: json,
+      headers: { 'Content-Type': 'application/json' },
+    }).then(res => {
       this.context.httpServer.response = res;
     });
   });
 
   this.Then('the HTTP response code is $status', function(status) {
     expect(this.context.httpServer.response.status).to.equal(parseInt(status));
+  });
+
+  this.Then('the HTTP response body is of type $type', function(type) {
+    expect(typeof this.context.httpServer.response.body).to.equal(type);
+    console.log(`HTTP response body`, this.context.httpServer.response.body);
   });
 
   this.Then('the HTTP response JSON contains that "$key" is "$value"', function(key, value) {
