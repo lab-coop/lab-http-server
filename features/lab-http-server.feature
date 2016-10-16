@@ -15,7 +15,7 @@ Feature:
     And this HTTP server is started
     When the GET /some/endpoint HTTP query is processed
     Then the HTTP response code is 200
-    Then the HTTP response JSON contains that "query" is "/some/endpoint"
+    Then the HTTP response JSON contains that "path" is "/some/endpoint"
     Then the HTTP response JSON contains that "verb" is "GET"
 
   Scenario: The HTTP server has a registered route but something invalid is queried
@@ -33,4 +33,5 @@ Feature:
     Then the HTTP response code is 200
     Then the HTTP response JSON contains that "params.resourceId" is "42"
     Then the HTTP response JSON contains that "params.nestedId" is "1"
+    Then the HTTP response JSON contains that "query.option" is "7"
 

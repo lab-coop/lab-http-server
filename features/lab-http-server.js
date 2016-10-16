@@ -20,11 +20,9 @@ module.exports = function() {
     return this.context.httpServer.instance.start();
   });
 
-  this.Given('the $verb $query HTTP route is defined', function(verb, query) {
-    // assumes json
-    this.context.httpServer.instance.registerRoute(verb, query, (ctx, next) => {
-      ctx.response.body = { test: true, verb, query, params: ctx.params };
-      console.log('Called', verb, query);
+  this.Given('the $verb $query HTTP route is defined', function(verb, path) {
+    this.context.httpServer.instance.registerRoute(verb, path, (ctx, next) => {
+      ctx.response.body = { test: true, verb, path, query: ctx.query, params: ctx.params };
       return next();
     });
   });
