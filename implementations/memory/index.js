@@ -25,11 +25,7 @@ module.exports = function HTTPServerMemoryImplementation() {
 
     function sendRequest(verb, path, {body, headers}={}) {
       let [query, params] = path.split('?');
-      body = parseBody(body, headers);
-      function parseBody(body, headers={}) {
-        if (headers['Content-Type'] === 'application/json') return JSON.parse(body);
-        else return body;
-      }
+      body = middlewareHelper.parseBody(body, headers);
       params = querystring.parse(params);
       if (!started) {
         throw new Error(`HTTP server is not started when ${verb}ing ${path}.`);

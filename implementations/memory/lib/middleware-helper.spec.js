@@ -24,4 +24,26 @@ describe('middleware-helper', () => {
       });
     })
   });
+
+  describe('parseBody', () => {
+    context('given the Content-Type is application/json', () => {
+      it('should parse the input JSON', () => {
+        const parsed = middlewareHelper.parseBody('{"iAmJson": true}', {
+          'Content-Type': 'application/json'
+        });
+        expect(parsed.iAmJson).to.be.true;
+      });
+
+      it('should throw an invalid json', () => {
+        expect(() => middlewareHelper.parseBody("I ain't no json!", {
+          'Content-Type': 'application/json'
+        })).to.throw()
+      });
+    });
+
+    it('should do nothing with the input value otherwise', () => {
+      const value = Object.freeze({});
+      expect(middlewareHelper.parseBody((value))).to.equal(value);
+    })
+  });
 });
