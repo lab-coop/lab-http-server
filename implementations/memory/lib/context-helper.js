@@ -1,6 +1,7 @@
 'use strict';
 const _ = require('lodash');
 const pathToRegexp = require('path-to-regexp');
+const querystring = require('querystring');
 
 module.exports = Object.freeze({
   createRoute,
@@ -30,22 +31,25 @@ function getStatus(routes, verb, query) {
 }
 
 function findRoute(routes, verb, query) {
+  query = query.split('?')[0];
   return _.find(routes, route =>
       route.method === verb.toLowerCase() &&
       route.pattern.test(query));
 }
 
 function findMethodNotAllowedRoute(routes, verb, query) {
+  query = query.split('?')[0];
   return _.find(routes, route =>
       route.method !== verb.toLowerCase() &&
       route.pattern.test(query));
 }
 
-function getDefaultContext(route, path, query, body) {
+function getDefaultContext(route, localPart, body) {
+  const [path, query] = localPart.split('?');
   const params = extractParams(route, path);
   return Object.freeze({
     params,
-    query,
+    query: querystring.parse(query),
     request: { body, params },
     response: {}
   });

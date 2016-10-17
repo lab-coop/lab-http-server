@@ -1,6 +1,5 @@
 'use strict';
 const _ = require('lodash');
-const querystring = require('querystring');
 const middlewareHelper = require('./lib/middleware-helper');
 const contextHelper = require('./lib/context-helper');
 
@@ -24,19 +23,15 @@ module.exports = function HTTPServerMemoryImplementation() {
     }
 
     function sendRequest(verb, path, {body, headers}={}) {
-      let [queryPath, queryParams] = path.split('?');
-      body = middlewareHelper.parseBody(body, headers);
-      queryParams = querystring.parse(queryParams);
       if (!started) throw new Error(`HTTP server is not started when ${verb}ing ${path}.`);
-      const route = contextHelper.findRoute(routes, verb, queryPath);
-      const ctx = contextHelper.getDefaultContext(route, queryPath, queryParams, body);
+      const requestBody = middlewareHelper.parseBody(body, headers);
+      const route = contextHelper.findRoute(routes, verb, path);
+      const ctx = contextHelper.getDefaultContext(route, path, requestBody);
       const middlewares = _.get(route, 'middlewares', []);
-      return middlewareHelper.processMiddlewares(ctx, middlewares).then(() => {
-        return {
-          status: ctx.status || contextHelper.getStatus(routes, verb, queryPath),
-          body: JSON.stringify(ctx.response.body)
-        }
-      });
+      return middlewareHelper.processMiddlewares(ctx, middlewares).then(() => ({
+        status: ctx.status || contextHelper.getStatus(routes, verb, path),
+        body: JSON.stringify(ctx.response.body)
+      }));
     }
   }
 };

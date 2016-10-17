@@ -51,9 +51,8 @@ describe('context-helper', () => {
   describe('getDefaultContext', () => {
     it('should create a context object from a route and a path', () => {
       const route = contextHelper.createRoute('GET', '/', (ctx, next) => next());
-      const payload = {somePayload: true};
-      const ctx = contextHelper.getDefaultContext(route, '/', payload);
-      expect(ctx.query).to.be.equal(payload);
+      const ctx = contextHelper.getDefaultContext(route, '/?somePayload=str');
+      expect(ctx.query).to.be.deep.equal({somePayload: 'str'});
       expect(ctx.params).to.be.an('object');
       expect(ctx.request).to.be.an('object');
       expect(ctx.response).to.be.an('object');
