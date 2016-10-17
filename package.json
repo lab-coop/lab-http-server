@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm-watch",
-    "test:safe": "npm run test:mocha:safe && npm run test:features:safe",
+    "test:safe": "npm run test:features:safe && npm run test:mocha:safe",
     "test:mocha": "mocha */*/*/*.spec.js */*/*.spec.js */*.spec.js --colors",
     "test:mocha:safe": "npm run test:mocha 2> /dev/null || exit 0",
     "test:features": "cucumber-js features/*.feature",

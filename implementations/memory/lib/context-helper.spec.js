@@ -21,22 +21,42 @@ describe('context-helper', () => {
       const route = contextHelper.createRoute('gEt', '/', (ctx, next) => next());
       expect(contextHelper.findMethodNotAllowedRoute([route], 'GeT', '/')).not.to.be.ok;
     });
-    it('should find a route which was querid ', () => {
+    it('should find a route which was queried ', () => {
       const route = contextHelper.createRoute('gEt', '/', (ctx, next) => next());
       expect(contextHelper.findMethodNotAllowedRoute([route], 'POST', '/')).to.be.ok;
     });
   });
 
-  describe('getContext', () => {
+  describe('getStatus', () => {
+    it('should give 404 for no routes', () => {
+      expect(contextHelper.getStatus([], 'GET', '/')).to.equal(404);
+    });
+
+    it('should give 404 if not found', () => {
+      const postRoute = contextHelper.createRoute('POST', '/', (ctx, next) => next());
+      expect(contextHelper.getStatus([postRoute], 'POST', '/other')).to.equal(404);
+    });
+
+    it('should give 200 for a matched route', () => {
+      const postRoute = contextHelper.createRoute('POST', '/', (ctx, next) => next());
+      expect(contextHelper.getStatus([postRoute], 'POST', '/')).to.equal(200);
+    });
+
+    it('should give 405 for an existing route queried with another method', () => {
+      const getRoute = contextHelper.createRoute('GET', '/', (ctx, next) => next());
+      expect(contextHelper.getStatus([getRoute], 'POST', '/')).to.equal(405);
+    })
+  });
+
+  describe('getDefaultContext', () => {
     it('should create a context object from a route and a path', () => {
       const route = contextHelper.createRoute('GET', '/', (ctx, next) => next());
-      const ctx = contextHelper.getContext(route, '/');
-      expect(ctx.status).to.be.a.number;
-      expect(ctx).to.be.an.object;
-      expect(ctx.params).to.be.an.object;
-      expect(ctx.request).to.be.an.object;
-      expect(ctx.response).to.be.an.object;
-      expect(ctx.middlewares).to.be.an.array;
+      const payload = {somePayload: true};
+      const ctx = contextHelper.getDefaultContext(route, '/', payload);
+      expect(ctx.query).to.be.equal(payload);
+      expect(ctx.params).to.be.an('object');
+      expect(ctx.request).to.be.an('object');
+      expect(ctx.response).to.be.an('object');
     });
   });
 });

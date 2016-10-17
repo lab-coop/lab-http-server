@@ -6,7 +6,8 @@ module.exports = Object.freeze({
   createRoute,
   findRoute,
   findMethodNotAllowedRoute,
-  getContext
+  getDefaultContext,
+  getStatus,
 });
 
 function createRoute(verb, path, middlewares) {
@@ -22,6 +23,12 @@ function createRoute(verb, path, middlewares) {
   });
 }
 
+function getStatus(routes, verb, query) {
+  const route = findRoute(routes, verb, query);
+  if (findMethodNotAllowedRoute(routes, verb, query)) return 405;
+  return _.get(route, 'middlewares.length', 0) === 0 ? 404 : 200;
+}
+
 function findRoute(routes, verb, query) {
   return _.find(routes, route =>
       route.method === verb.toLowerCase() &&
@@ -34,10 +41,9 @@ function findMethodNotAllowedRoute(routes, verb, query) {
       route.pattern.test(query));
 }
 
-function getContext(route, path, query, body, status) {
+function getDefaultContext(route, path, query, body) {
   const params = extractParams(route, path);
   return Object.freeze({
-    status: status || _.get(route, 'middlewares.length', 0) === 0 ? 404 : 200,
     params,
     query,
     request: { body, params },
