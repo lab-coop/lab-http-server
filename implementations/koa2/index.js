@@ -16,6 +16,11 @@ module.exports = function HTTPServerKoaImplementation() {
     const {protocol, host, port} = url.parse(serverUrl);
     let server;
     return Object.freeze({
+      get: (...args) => registerRoute('get', ...args),
+      put: (...args) => registerRoute('put', ...args),
+      post: (...args) => registerRoute('post', ...args),
+      patch: (...args) => registerRoute('patch', ...args),
+      delete: (...args) => registerRoute('delete', ...args),
       registerRoute,
       start,
       stop,

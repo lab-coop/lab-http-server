@@ -11,15 +11,23 @@ module.exports = function HTTPServerMemoryImplementation() {
   function createInMemoryServer() {
     routes = [];
     let started = false;
-    return Object.freeze({
+    return Object.freeze(Object.assign(httpVerbs(registerRoute), {
       registerRoute,
       start: () => started = true,
       stop: () => started = false,
       sendRequest
-    });
+    }));
 
     function registerRoute(verb, path, ...middlewares) {
       routes.push(contextHelper.createRoute(verb, path, middlewares));
+    }
+
+    function httpVerbs(fn, methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE']) {
+      return methods
+          .map(method => method.toLowerCase())
+          .reduce((partials, verb) => Object.assign(partials, {
+            [verb]: _.partial(fn, verb)
+          }), {});
     }
 
     function sendRequest(verb, path, {body, headers}={}) {

@@ -25,7 +25,7 @@ module.exports = function() {
   });
 
   this.Given('the $verb $query HTTP route is defined', function(verb, path) {
-    this.context.httpServer.instance.registerRoute(verb, path, (ctx, next) => {
+    this.context.httpServer.instance[verb.toLowerCase()](path, (ctx, next) => {
       ctx.response.body = {
         test: true,
         verb, path,
