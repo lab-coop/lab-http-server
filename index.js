@@ -8,7 +8,7 @@ module.exports = function HTTPServerService(config) {
     switch (implementationType) {
       case 'koa2':
         return require('./implementations/koa2');
-      case 'memory':
+      case 'lab-http-server-memory':
         return require('./implementations/memory');
       default:
         throw new Error(`Could not find ${implementationType} implementation.`);

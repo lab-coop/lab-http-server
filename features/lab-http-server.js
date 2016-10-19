@@ -12,12 +12,12 @@ module.exports = function() {
   });
 
   this.Given('an HTTP server is started', function() {
-    const httpServer = this.container.get('httpServer');
+    const httpServer = this.container.get('lab-http-server');
     this.context.httpServer.instance = httpServer.createServer();
     return this.context.httpServer.instance.start();
   });
   this.Given('an HTTP server exists', function() {
-    const httpServer = this.container.get('httpServer');
+    const httpServer = this.container.get('lab-http-server');
     this.context.httpServer.instance = httpServer.createServer();
   });
   this.Given('this HTTP server is started', function() {

@@ -1,28 +1,13 @@
 'use strict';
+const di = require('lab-di');
+const path = require('path');
 
 module.exports = function() {
   this.World = World;
 };
 
 function World() {
-  const config = Object.freeze({
-    get: key => {
-      switch (key) {
-        case 'httpServer.type':
-          return process.env.LAB_HTTP_SERVER_TYPE || 'memory';
-        default:
-          throw new Error(`Could not find config value for ${key}`)
-      }
-      return key === 'httpServer.type' ? 'memory' : undefined;
-    }
-  });
-  let containerObject = {
-    config,
-    httpServer: require('../index')(config)
-};
-  this.container = Object.freeze({
-    get(key) {
-      return containerObject[key];
-    }
-  });
+  this.container = di();
+  this.container.registerDir(path.join(__dirname, '../implementations'));
+  this.container.registerDir(path.join(__dirname, '../dependencies'));
 }
