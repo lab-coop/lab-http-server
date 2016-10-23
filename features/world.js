@@ -8,6 +8,7 @@ module.exports = function() {
 
 function World() {
   this.container = di();
-  this.container.registerDir(path.join(__dirname, '../implementations'));
   this.container.registerDir(path.join(__dirname, '../dependencies'));
+
+  require('../index')(this.container);
 }

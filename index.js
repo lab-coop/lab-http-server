@@ -1,17 +1,6 @@
 'use strict';
+const path = require('path');
 
-module.exports = function HTTPServerService(config) {
-  const implementationType = config.get('httpServer.type');
-  return getImplementation(implementationType)(...arguments);
-
-  function getImplementation(implementationType) {
-    switch (implementationType) {
-      case 'koa2':
-        return require('./implementations/koa2');
-      case 'lab-http-server-memory':
-        return require('./implementations/memory');
-      default:
-        throw new Error(`Could not find ${implementationType} implementation.`);
-    }
-  }
+module.exports = container => {
+  container.registerDir(path.join(__dirname, '/implementations'));
 };
