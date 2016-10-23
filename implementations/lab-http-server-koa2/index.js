@@ -3,11 +3,13 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const bodyparser = require('koa-bodyparser');
-const fetch = require('node-fetch');
 const url = require('url');
 const { httpMethodShorthands } = require('../lab-http-server/lib/instance-helper');
 
-module.exports = function HTTPServerKoaImplementation() {
+module.exports = HTTPServerKoa2Implementation;
+module.exports.deps = ['lab-http-client-fetch'];
+
+function HTTPServerKoa2Implementation(httpClient) {
   return Object.freeze({
     createServer
   });
@@ -43,20 +45,7 @@ module.exports = function HTTPServerKoaImplementation() {
     }
 
     function sendRequest(method, query, {body, headers}={}) {
-      return fetch(`${protocol}//${host}${query}`, {
-        method, body, headers, redirect: 'manual'
-      }).then(response => {
-        const responseHeaders = {};
-        response.headers.forEach((value, name) => responseHeaders[name] = value);
-
-        return response.text().then(responseText => {
-          return {
-            status: response.status,
-            headers: responseHeaders,
-            body: responseText
-          };
-        });
-      });
+      return httpClient.sendRequest(`${protocol}//${host}${query}`, {method, body, headers});
     }
   }
-};
+}
