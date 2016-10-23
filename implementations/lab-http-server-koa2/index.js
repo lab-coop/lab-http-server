@@ -5,6 +5,7 @@ const Router = require('koa-router');
 const bodyparser = require('koa-bodyparser');
 const fetch = require('node-fetch');
 const url = require('url');
+const { httpMethodShorthands } = require('../lab-http-server/lib/instance-helper');
 
 module.exports = function HTTPServerKoaImplementation() {
   return Object.freeze({
@@ -15,17 +16,12 @@ module.exports = function HTTPServerKoaImplementation() {
     const App = new Koa(), router = new Router();
     const {protocol, host, port} = url.parse(serverUrl);
     let server;
-    return Object.freeze({
-      get: (...args) => registerRoute('get', ...args),
-      put: (...args) => registerRoute('put', ...args),
-      post: (...args) => registerRoute('post', ...args),
-      patch: (...args) => registerRoute('patch', ...args),
-      delete: (...args) => registerRoute('delete', ...args),
-      registerRoute,
+
+    return Object.freeze(httpMethodShorthands(registerRoute, router.methods, {
       start,
       stop,
       sendRequest
-    });
+    }));
 
     function registerRoute(verb, path, ...middlewares) {
       router[verb.toLowerCase()].bind(router)(path, ...middlewares);
