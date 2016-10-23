@@ -39,7 +39,7 @@ Feature:
     Given the POST /some/post/endpoint HTTP route is defined
     When the POST /some/post/endpoint HTTP query is processed
     Then the HTTP response code is 200
-    Then the HTTP response JSON contains no "response.body"
+    Then the HTTP response JSON contains that "request.body" is empty
 
   Scenario: The HTTP server receives a POST request with some form data
     Given the POST /some/post/endpoint HTTP route is defined

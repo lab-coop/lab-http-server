@@ -69,9 +69,9 @@ module.exports = function() {
     expect(_.get(json, key)).to.equal(value);
   });
 
-  this.Then('the HTTP response JSON contains no "$key"', function(key) {
+  this.Then('the HTTP response JSON contains that "$key" is empty', function(key) {
     const json = ensureObject(this.context.httpServer.response.body);
-    expect(_.get(json, key)).to.be.undefined;
+    expect(_.get(json, key)).to.be.empty;
   });
 
   function ensureObject(value) {
