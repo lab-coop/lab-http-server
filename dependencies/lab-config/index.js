@@ -1,15 +1,12 @@
 'use strict';
-
+const _ = require('lodash');
 module.exports = function() {
+  let updates = {};
   return Object.freeze({
-    get: get
+    get: (key) => _.get(updates, key) || unknown(key),
+    update: (key, value) => _.set(updates, key, value)
   });
 };
-function get(key) {
-  switch (key) {
-    case 'httpServer.type':
-      return process.env.LAB_HTTP_SERVER_TYPE || 'memory';
-    default:
-      throw new Error(`Unknown mock config value for key "${key}".`)
-  }
+function unknown(key) {
+  throw new Error(`Unknown mock config value for key "${key}".`)
 }
