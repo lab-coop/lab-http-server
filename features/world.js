@@ -10,8 +10,12 @@ function World() {
   this.container = di();
   this.container.registerDir(path.join(__dirname, '../dependencies'));
 
-  this.container.get('lab-config').update('httpServer.type',
-      process.env.LAB_HTTP_SERVER_TYPE || 'memory');
+  const config = this.container.get('lab-config');
+  // config.update('httpServer.type', process.env.LAB_HTTP_SERVER_TYPE || 'memory');
+  // config.update('httpClient.type', process.env.LAB_HTTP_CLIENT_TYPE || 'server');
+  config.update('httpServer.type', process.env.LAB_HTTP_SERVER_TYPE || 'koa2');
+  config.update('httpClient.type', process.env.LAB_HTTP_CLIENT_TYPE || 'fetch');
+
 
   require('../index')(this.container);
 }

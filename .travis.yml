@@ -2,8 +2,8 @@ language: node_js
 node_js:
   - "6"
 env:
-  - FOO=1 LAB_HTTP_SERVER_TYPE=memory
-  - FOO=2 LAB_HTTP_SERVER_TYPE=koa2
+  - LAB_HTTP_SERVER_TYPE=memory LAB_HTTP_CLIENT_TYPE=server
+  - LAB_HTTP_SERVER_TYPE=koa2 LAB_HTTP_CLIENT_TYPE=fetch
 install:
   - "npm install"
   - "npm install koa@2 koa-router@next koa-bodyparser@next"

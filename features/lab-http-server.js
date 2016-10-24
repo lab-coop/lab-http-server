@@ -41,14 +41,21 @@ module.exports = function() {
     });
   });
 
-  this.When('the $method $query HTTP query is processed', function (verb, query) {
-    return this.context.httpServer.instance.sendRequest(verb, query).then(res => {
+  this.When('the $method $query HTTP query is processed', function (method, query) {
+    const httpClient = this.container.get('lab-http-client');
+    const httpServerInstance = this.context.httpServer.instance;
+    return httpClient.sendRequest(httpServerInstance.getPath(query), {
+      method: method.toUpperCase()
+    }).then(res => {
       this.context.httpServer.response = res;
     });
   });
 
-  this.When('the $json JSON arrives to POST $query', function (json, query) {
-    return this.context.httpServer.instance.sendRequest('POST', query, {
+  this.When('the $json JSON arrives to $method $query', function (json, method, query) {
+    const httpClient = this.container.get('lab-http-client');
+    const httpServerInstance = this.context.httpServer.instance;
+    return httpClient.sendRequest(httpServerInstance.getPath(query), {
+      method: method.toUpperCase(),
       body: json,
       headers: { 'Content-Type': 'application/json' },
     }).then(res => {

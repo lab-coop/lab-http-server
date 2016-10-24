@@ -6,10 +6,7 @@ const bodyparser = require('koa-bodyparser');
 const url = require('url');
 const { httpMethodShorthands } = require('../lab-http-server/lib/instance-helper');
 
-module.exports = HTTPServerKoa2Implementation;
-module.exports.deps = ['lab-http-client-fetch'];
-
-function HTTPServerKoa2Implementation(httpClient) {
+module.exports = function HTTPServerKoa2Implementation() {
   return Object.freeze({
     createServer
   });
@@ -21,9 +18,9 @@ function HTTPServerKoa2Implementation(httpClient) {
 
     return Object.freeze(httpMethodShorthands(registerRoute, router.methods, {
       use: App.use.bind(App),
+      getPath: (query) => `${protocol}//${host}${query}`,
       start,
-      stop,
-      sendRequest
+      stop
     }));
 
     function registerRoute(verb, path, ...middlewares) {
@@ -43,9 +40,5 @@ function HTTPServerKoa2Implementation(httpClient) {
       server.close();
       console.log('Stopped on port', port);
     }
-
-    function sendRequest(method, query, {body, headers}={}) {
-      return httpClient.sendRequest(`${protocol}//${host}${query}`, {method, body, headers});
-    }
   }
-}
+};
