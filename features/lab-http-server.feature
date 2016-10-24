@@ -47,3 +47,8 @@ Feature:
     Then the HTTP response code is 200
     Then the HTTP response body is of type string
     Then the HTTP response JSON contains that "request.body.iAmJson" is "yep"
+
+  Scenario: The HTTP server has a middleware attached
+    Given an in-memory logger middleware is defined
+    When the GET /some/random/endpoint HTTP query is processed
+    Then the in-memory logger middleware should have 1 logs

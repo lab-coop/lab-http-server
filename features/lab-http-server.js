@@ -77,4 +77,20 @@ module.exports = function() {
   function ensureObject(value) {
     return typeof value === 'string' ? JSON.parse(value) : value;
   }
+
+  this.Given('an in-memory logger middleware is defined', function() {
+    this.context.httpServer.logs = [];
+    this.context.httpServer.instance.use((ctx, next) => {
+      let entry = [false, ctx];
+      this.context.httpServer.logs.push(entry);
+      return next().then(res => {
+        entry[0] = true;
+        return res;
+      })
+    })
+  });
+
+  this.Then('the in-memory logger middleware should have $logCount logs', function(logCount) {
+    expect(this.context.httpServer.logs).to.have.length(logCount);
+  });
 };

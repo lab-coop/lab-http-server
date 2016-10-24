@@ -18,6 +18,7 @@ module.exports = function HTTPServerKoaImplementation() {
     let server;
 
     return Object.freeze(httpMethodShorthands(registerRoute, router.methods, {
+      use: App.use.bind(App),
       start,
       stop,
       sendRequest

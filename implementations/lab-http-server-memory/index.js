@@ -6,14 +6,15 @@ const middlewareHelper = require('./lib/middleware-helper');
 const contextHelper = require('./lib/context-helper');
 
 module.exports = function HTTPServerMemoryImplementation() {
-  let routes;
+  let routes, middlewares;
   return Object.freeze({
     createServer: createInMemoryServer
   });
   function createInMemoryServer() {
-    routes = [];
+    routes = [], middlewares = [];
     let started = false;
     return Object.freeze(httpMethodShorthands(registerRoute, HTTP_VERBS, {
+      use: (middleware) => middlewares.push(middleware),
       start: () => started = true,
       stop: () => started = false,
       sendRequest
@@ -28,8 +29,8 @@ module.exports = function HTTPServerMemoryImplementation() {
       const requestBody = middlewareHelper.parseBody(body, headers);
       const route = contextHelper.findRoute(routes, verb, path);
       const ctx = contextHelper.getDefaultContext(route, path, requestBody);
-      const middlewares = _.get(route, 'middlewares', []);
-      return middlewareHelper.processMiddlewares(ctx, middlewares).then(() => ({
+      const routeMiddlewares = middlewares.concat(_.get(route, 'middlewares', []));
+      return middlewareHelper.processMiddlewares(ctx, routeMiddlewares).then(() => ({
         status: ctx.status || contextHelper.getStatus(routes, verb, path),
         body: JSON.stringify(ctx.response.body)
       }));
