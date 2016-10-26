@@ -4,7 +4,8 @@ Feature:
   As a dev I want to be able to respond to HTTP requests
 
   Background:
-    Given an HTTP server is started
+    Given an HTTP server exists
+    And this HTTP server is started
 
   Scenario: The HTTP server responds with 404 Not Found
     When the GET /some/endpoint HTTP query is processed

@@ -11,11 +11,6 @@ module.exports = function() {
     _.get(this.context, 'httpServer.instance.stop', () => {})();
   });
 
-  this.Given('an HTTP server is started', function() {
-    const httpServer = this.container.get('lab-http-server');
-    this.context.httpServer.instance = httpServer.createServer();
-    return this.context.httpServer.instance.start();
-  });
   this.Given('an HTTP server exists', function() {
     const httpServer = this.container.get('lab-http-server');
     this.context.httpServer.instance = httpServer.createServer();
