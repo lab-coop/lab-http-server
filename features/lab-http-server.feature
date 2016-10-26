@@ -52,3 +52,19 @@ Feature:
     Given an in-memory logger middleware is defined
     When the GET /some/random/endpoint HTTP query is processed
     Then the in-memory logger middleware should have 1 logs
+
+  Scenario: The HTTP server redirects to one of its other endpoints
+    Given that GET /redirected HTTP redirects to /some/post/endpoint
+    When the GET /redirected HTTP query is processed
+    Then the HTTP response code is 302
+
+  Scenario: The HTTP server redirects to the outside
+    Given that GET /redirected HTTP redirects to http://example.com/does/not/exist
+    When the GET /redirected HTTP query is processed
+    Then the HTTP response code is 302
+
+#  Scenario: The HTTP server redirects back
+#    Given that GET /redirected HTTP redirects to back
+#    When the GET /redirected HTTP query is processed
+#    Then the HTTP response code is 302
+#    Then the Location response header is http://localhost:8080/

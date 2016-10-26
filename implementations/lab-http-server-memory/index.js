@@ -31,6 +31,7 @@ module.exports = function HTTPServerMemoryImplementation() {
       const ctx = contextHelper.getDefaultContext(route, path, requestBody);
       const routeMiddlewares = middlewares.concat(_.get(route, 'middlewares', []));
       return middlewareHelper.processMiddlewares(ctx, routeMiddlewares).then(() => ({
+        headers: ctx.response.headers,
         status: ctx.status || contextHelper.getStatus(routes, verb, path),
         body: JSON.stringify(ctx.response.body)
       }));

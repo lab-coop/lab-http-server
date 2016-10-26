@@ -35,7 +35,13 @@ module.exports = function() {
           body: _.get(ctx, 'request.body')
         }
       };
-      // console.log('Responding with', ctx.response.body);
+      return next();
+    });
+  });
+
+  this.Given('that $verb $query HTTP redirects to $redirectTo', function(verb, path, redirectTo) {
+    this.context.httpServer.instance[verb.toLowerCase()](path, (ctx, next) => {
+      ctx.response.redirect(redirectTo);
       return next();
     });
   });
@@ -67,6 +73,10 @@ module.exports = function() {
   this.Then('the HTTP response JSON contains that "$key" is "$value"', function(key, value) {
     const json = ensureObject(this.context.httpServer.response.body);
     expect(_.get(json, key)).to.equal(value);
+  });
+
+  this.Then('the $name response header is $value', function(name, value) {
+    expect(this.context.httpServer.response.headers[name.toLowerCase()]).to.equal(value);
   });
 
   this.Then('the HTTP response JSON contains that "$key" is empty', function(key) {

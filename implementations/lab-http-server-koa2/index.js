@@ -44,11 +44,15 @@ module.exports = function HTTPServerKoaImplementation() {
 
     function sendRequest(method, query, {body, headers}={}) {
       return fetch(`${protocol}//${host}${query}`, {
-        method, body, headers
+        method, body, headers, redirect: 'manual'
       }).then(response => {
+        const responseHeaders = {};
+        response.headers.forEach((value, name) => responseHeaders[name] = value);
+
         return response.text().then(responseText => {
           return {
             status: response.status,
+            headers: responseHeaders,
             body: responseText
           };
         });

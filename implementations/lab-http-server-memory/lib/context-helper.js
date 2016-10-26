@@ -47,12 +47,21 @@ function findMethodNotAllowedRoute(routes, verb, query) {
 function getDefaultContext(route, localPart, body) {
   const [path, query] = localPart.split('?');
   const params = extractParams(route, path);
-  return Object.freeze({
+  const ctx = {
     params,
     query: querystring.parse(query),
     request: { body, params },
-    response: {}
-  });
+    response: {
+      headers: {},
+      redirect
+    }
+  };
+  return ctx;
+
+  function redirect(path) {
+    ctx.status = ctx.status || 302;
+    ctx.response.headers['location'] = path;
+  }
 }
 
 function extractParams(route, query) {
