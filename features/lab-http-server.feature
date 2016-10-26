@@ -51,6 +51,7 @@ Feature:
 
   Scenario: The HTTP server has a middleware attached
     Given an in-memory logger middleware is defined
+    Given this HTTP server is restarted
     When the GET /some/random/endpoint HTTP query is processed
     Then the in-memory logger middleware should have 1 logs
 

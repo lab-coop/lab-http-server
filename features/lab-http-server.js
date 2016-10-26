@@ -16,7 +16,12 @@ module.exports = function() {
     this.context.httpServer.instance = httpServer.createServer();
   });
   this.Given('this HTTP server is started', function() {
-    return this.context.httpServer.instance.start();
+    this.context.httpServer.instance.start();
+  });
+
+  this.Given('this HTTP server is restarted', function() {
+    this.context.httpServer.instance.stop();
+    this.context.httpServer.instance.start();
   });
 
   this.Given('the $verb $query HTTP route is defined', function(verb, path) {

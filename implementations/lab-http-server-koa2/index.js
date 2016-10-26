@@ -17,7 +17,7 @@ module.exports = function HTTPServerKoa2Implementation() {
     let server;
 
     return Object.freeze(httpMethodShorthands(registerRoute, router.methods, {
-      use: App.use.bind(App),
+      use: (middleware) => App.use(middleware),
       getPath: (query) => `${protocol}//${host}${query}`,
       start,
       stop
