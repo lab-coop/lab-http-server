@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "6"
 env:
-  - LAB_HTTP_SERVER_TYPE=memory LAB_HTTP_CLIENT_TYPE=server
+  - LAB_HTTP_SERVER_TYPE=memory LAB_HTTP_CLIENT_TYPE=memory
   - LAB_HTTP_SERVER_TYPE=koa2 LAB_HTTP_CLIENT_TYPE=fetch
 install:
   - "npm install"
