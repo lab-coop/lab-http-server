@@ -82,10 +82,6 @@ module.exports = function() {
     expect(_.get(json, key)).to.equal(value);
   });
 
-  this.Then('the $name response header is $value', function(name, value) {
-    expect(this.context.httpServer.response.headers[name.toLowerCase()]).to.equal(value);
-  });
-
   this.Then('the HTTP response JSON contains that "$key" is empty', function(key) {
     const json = ensureObject(this.context.httpServer.response.body);
     expect(_.get(json, key)).to.be.empty;
@@ -94,6 +90,14 @@ module.exports = function() {
   function ensureObject(value) {
     return typeof value === 'string' ? JSON.parse(value) : value;
   }
+
+  this.Then('the $name response header is $value', function(name, value) {
+    expect(this.context.httpServer.response.headers[name.toLowerCase()]).to.equal(value);
+  });
+
+  this.Then('the $name response header has been set', function(name) {
+    expect(this.context.httpServer.response.headers[name.toLowerCase()]).to.be.ok;
+  });
 
   this.Given('an in-memory logger middleware is defined', function() {
     this.context.httpServer.logs = [];

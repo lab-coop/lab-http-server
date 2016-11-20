@@ -1,6 +1,5 @@
 'use strict';
 const diTools = require('lab-di/tools');
-const path = require('path');
 
 module.exports = function() {
   this.World = World;
@@ -15,8 +14,8 @@ function World() {
   this.container.registerModule(require('lab-config'), 'lab-config'); 
 
   const config = this.container.get('lab-config');
-  // config.update('httpServer.type', process.env.LAB_HTTP_SERVER_TYPE || 'memory');
-  // config.update('httpClient.type', process.env.LAB_HTTP_CLIENT_TYPE || 'server');
-  config.update('httpServer.type', process.env.LAB_HTTP_SERVER_TYPE || 'koa2');
-  config.update('httpClient.type', process.env.LAB_HTTP_CLIENT_TYPE || 'fetch');
+  config.update('httpServer.type', process.env.LAB_HTTP_SERVER_TYPE || 'memory');
+  config.update('httpClient.type', process.env.LAB_HTTP_CLIENT_TYPE || 'memory');
+  // config.update('httpServer.type', process.env.LAB_HTTP_SERVER_TYPE || 'koa2');
+  // config.update('httpClient.type', process.env.LAB_HTTP_CLIENT_TYPE || 'fetch');
 }

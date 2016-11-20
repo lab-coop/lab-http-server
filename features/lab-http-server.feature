@@ -61,12 +61,13 @@ Feature:
     Then the HTTP response code is 302
 
   Scenario: The HTTP server redirects to the outside
-    Given that GET /redirected HTTP redirects to http://example.com/does/not/exist
+    Given that GET /redirected HTTP redirects to http://example.com/x
     When the GET /redirected HTTP query is processed
     Then the HTTP response code is 302
+    Then the Location response header is http://example.com/x
 
-#  Scenario: The HTTP server redirects back
-#    Given that GET /redirected HTTP redirects to back
-#    When the GET /redirected HTTP query is processed
-#    Then the HTTP response code is 302
-#    Then the Location response header is http://localhost:8080/
+  Scenario: The HTTP server redirects back
+    Given that GET /redirected HTTP redirects to back
+    When the GET /redirected HTTP query is processed
+    Then the HTTP response code is 302
+    Then the Location response header has been set
