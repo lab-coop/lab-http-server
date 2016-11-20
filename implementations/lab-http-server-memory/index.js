@@ -4,6 +4,7 @@ const HTTP_VERBS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 const { httpMethodShorthands } = require('../lab-http-server/lib/instance-helper');
 const middlewareHelper = require('./lib/middleware-helper');
 const contextHelper = require('./lib/context-helper');
+const validator = require('./lib/validator');
 
 module.exports = function HTTPServerMemoryImplementation() {
   let routes, middlewares, started = false;
@@ -27,7 +28,8 @@ module.exports = function HTTPServerMemoryImplementation() {
   }
 
   function sendRequest(path, {method, body, headers}={}) {
-    if (!started) throw new Error(`HTTP server is not started when ${method}ing ${path}.`);
+    validator.validateStarted(started,
+      `HTTP server is not started when ${method}ing ${path}.`);
     const requestBody = middlewareHelper.parseBody(body, headers);
     const route = contextHelper.findRoute(routes, method, path);
     const ctx = contextHelper.getDefaultContext(route, path, requestBody);
@@ -38,4 +40,4 @@ module.exports = function HTTPServerMemoryImplementation() {
       body: JSON.stringify(ctx.response.body)
     }));
   }
-}
+};
