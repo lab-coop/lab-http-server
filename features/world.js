@@ -1,5 +1,6 @@
 'use strict';
 const diTools = require('lab-di/tools');
+const attachHttpClient = require('lab-http-client');
 
 module.exports = function() {
   this.World = World;
@@ -11,7 +12,8 @@ function World() {
   require('../index')(diWrapper);
 
   this.container = diWrapper.getDI();
-  this.container.registerModule(require('lab-config'), 'lab-config'); 
+  this.container.registerModule(require('lab-config'), 'lab-config');
+  attachHttpClient(this.container);
 
   const config = this.container.get('lab-config');
   config.update('httpServer.type', process.env.LAB_HTTP_SERVER_TYPE || 'memory');
