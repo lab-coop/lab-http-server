@@ -20,7 +20,20 @@ const httpServer = container.get('lab-http-server');
 const server = httpServer.createServer('http://localhost:5000');
 server.get('/*', (ctx, next) => {
  ctx.body = 'Hello!'
- return next();
+ return next().then(() => console.log('later'))
 });
 server.start();
 ```
+
+This package itself does not rely on async/await, but you may use it wherever available: 
+
+```javascript
+server.get('/*', async (ctx, next) => {
+ ctx.body = 'Hello!'
+ await next()
+ console.log('later')
+});
+```
+
+## Tests
+Start a test loop via `npm test`.
